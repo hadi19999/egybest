@@ -8,7 +8,7 @@ chrome_options = Options()
 
 chrome_options.add_argument("--headless")
 
-driver = webdriver.Chrome("chromedriver",options=chrome_options)
+driver = webdriver.Chrome("./chromedriver",options=chrome_options)
 
 def get_movies():
     driver.get("https://best.egybest.film:2053/egbest/")
