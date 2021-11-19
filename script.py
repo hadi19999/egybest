@@ -10,21 +10,38 @@ chrome_options.add_argument("--headless")
 
 driver = webdriver.Chrome("./chromedriver",options=chrome_options)
 
-def get_movies():
-    driver.get("https://best.egybest.film:2053/egbest/")
+def get_movies(word = None):
+    if word:
+        driver.get("https://best.egybest.film:2053/find/?q=" + str(word))
+        css_selector = "[class='blocks flex-center']"
+        items = driver.find_element_by_css_selector(css_selector).find_elements_by_css_selector("[class='block']")
+        movies = []
+        counter = 0
+        for item in items:
+            counter = counter + 1
+            movies.append({
+                "id": counter,
+                "name": item.find_element_by_tag_name('h3').get_attribute('innerHTML'),
+                "link": item.get_attribute('href')
+            })
+        return movies
+    else:
+        driver.get("https://best.egybest.film:2053/egbest/")
+        css_selector = "[class='owl-item']"
+        items = driver.find_elements_by_css_selector(css_selector)
+        movies = []
+        counter = 0
+        for item in items:
+            counter = counter + 1
+            movies.append({
+                "id": counter,
+                "name": item.find_element_by_tag_name('h3').get_attribute('innerHTML'),
+                "link": item.find_element_by_tag_name('a').get_attribute('href')
+            })
+        return movies
     time.sleep(10)
 
-    items = driver.find_elements_by_css_selector("[class='owl-item']")
-    movies = []
-    counter = 0
-    for item in items:
-        counter = counter + 1
-        movies.append({
-            "id": counter,
-            "name": item.find_element_by_tag_name('h3').get_attribute('innerHTML'),
-            "link": item.find_element_by_tag_name('a').get_attribute('href')
-        })
-    return movies
+    
 
 
 # movie = get_movies()[0]
@@ -50,7 +67,12 @@ def get_link(quality):
     return link
 
 def display():
-    movies = get_movies()
+    action = input('What do you want? Enter "search" or "best": ' )
+    if action == 'search':
+        word = input('What to search? ')
+        movies = get_movies(word)
+    else:
+        movies = get_movies()
     for movie in movies:
         print(movie['id'],movie['name'])
     movie_id = int(input("Enter movie number: "))
@@ -59,10 +81,12 @@ def display():
         print(quality['id'],quality['name'])
     quality_id = int(input("Enter quality number: "))
     link = get_link(qualities[quality_id-1])
-    # print(link)
-    print('Donwloading...')
-    wget.download(link)
-    print("Download completed")
+    print(link)
+    download = input('download? "yes/y" ')
+    if download in ["yes", "y"]:
+        print('Donwloading...')
+        wget.download(link)
+        print("Download completed")
 
 display()
 driver.close()

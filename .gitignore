@@ -1,3 +1,6 @@
 venv
 chromedriver
 chromedriver.exe
+*.mkv
+*.tmp
+.vscode
