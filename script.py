@@ -21,7 +21,7 @@ def get_movies(word = None):
             counter = counter + 1
             movies.append({
                 "id": counter,
-                "name": item.find_element_by_tag_name('h3').get_attribute('innerHTML'),
+                "name": item.find_element_by_tag_name('h3').get_attribute('innerHTML') + " " + item.find_element_by_tag_name('span').get_attribute('innerHTML'),
                 "link": item.get_attribute('href')
             })
         return movies
@@ -35,7 +35,7 @@ def get_movies(word = None):
             counter = counter + 1
             movies.append({
                 "id": counter,
-                "name": item.find_element_by_tag_name('h3').get_attribute('innerHTML'),
+                "name": item.find_element_by_tag_name('h3').get_attribute('innerHTML') + " " + item.find_element_by_tag_name('span').get_attribute('innerHTML'),
                 "link": item.find_element_by_tag_name('a').get_attribute('href')
             })
         return movies
